@@ -200,7 +200,7 @@ namespace RuntimeGizmos
 			Color zColor = this.zColor;
 			Color allColor = this.allColor;
 
-			if (!isEditable)
+			if (isEditable)
 			{
 				xColor = (nearAxis == Axis.X) ? (isTransforming) ? selectedColor : hoverColor : this.xColor;
 				yColor = (nearAxis == Axis.Y) ? (isTransforming) ? selectedColor : hoverColor : this.yColor;
