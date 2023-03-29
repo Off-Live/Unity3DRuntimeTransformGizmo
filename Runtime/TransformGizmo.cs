@@ -101,6 +101,8 @@ namespace RuntimeGizmos
 
 		public Transform mainTargetRoot {get {return (targetRootsOrdered.Count > 0) ? (useFirstSelectedAsMain) ? targetRootsOrdered[0] : targetRootsOrdered[targetRootsOrdered.Count - 1] : null;}}
 
+		public bool isEditable = false;
+		
 		AxisInfo axisInfo;
 		Axis nearAxis = Axis.None;
 		Axis planeAxis = Axis.None;
@@ -163,12 +165,13 @@ namespace RuntimeGizmos
 			}else{
 				SetNearAxis();
 			}
-			
-			GetTarget();
 
-			if(mainTargetRoot == null) return;
-			
-			TransformSelected();
+			if (isEditable)
+			{
+				GetTarget();
+				if (mainTargetRoot == null) return;
+				TransformSelected();
+			}
 		}
 
 		void LateUpdate()
@@ -192,11 +195,18 @@ namespace RuntimeGizmos
 
 			lineMaterial.SetPass(0);
 
-			Color xColor = (nearAxis == Axis.X) ? (isTransforming) ? selectedColor : hoverColor : this.xColor;
-			Color yColor = (nearAxis == Axis.Y) ? (isTransforming) ? selectedColor : hoverColor : this.yColor;
-			Color zColor = (nearAxis == Axis.Z) ? (isTransforming) ? selectedColor : hoverColor : this.zColor;
-			Color allColor = (nearAxis == Axis.Any) ? (isTransforming) ? selectedColor : hoverColor : this.allColor;
+			Color xColor = this.xColor;
+			Color yColor = this.yColor;
+			Color zColor = this.zColor;
+			Color allColor = this.allColor;
 
+			if (!isEditable)
+			{
+				xColor = (nearAxis == Axis.X) ? (isTransforming) ? selectedColor : hoverColor : this.xColor;
+				yColor = (nearAxis == Axis.Y) ? (isTransforming) ? selectedColor : hoverColor : this.yColor;
+				zColor = (nearAxis == Axis.Z) ? (isTransforming) ? selectedColor : hoverColor : this.zColor;
+				allColor = (nearAxis == Axis.Any) ? (isTransforming) ? selectedColor : hoverColor : this.allColor;
+			}
 			//Note: The order of drawing the axis decides what gets drawn over what.
 
 			TransformType moveOrScaleType = (transformType == TransformType.Scale || (isTransforming && translatingType == TransformType.Scale)) ? TransformType.Scale : TransformType.Move;
